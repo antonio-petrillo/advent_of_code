@@ -26,46 +26,40 @@ parse_data :: proc(raw: []byte) -> [dynamic]Reindeer {
     defer delete(lines)
     for &line, j in lines[:len(lines) - 1] {
         r: Reindeer
-        offset := 0
         for ch, i in line {
             if ch >= '0' && ch <= '9' {
-                offset = i
+                line = line[i:]
                 break
             }
         } 
-        line = line[offset:]
         for ch, i in line {
             if ch >= '0' && ch <= '9' {
                 r.speed = r.speed * 10 + int(ch - '0')
             } else {
-                offset = i
+                line = line[i:]
                 break
             }
         }
-        line = line[offset:]
         for ch, i in line {
             if ch >= '0' && ch <= '9' {
-                offset = i
+                line = line[i:]
                 break
             }
         } 
-        line = line[offset:]
         for ch, i in line {
             if ch >= '0' && ch <= '9' {
                 r.flying_time = r.flying_time * 10 + int(ch - '0')
             } else {
-                offset = i
+                line = line[i:]
                 break
             }
         }
-        line = line[offset:]
         for ch, i in line {
             if ch >= '0' && ch <= '9' {
-                offset = i
+                line = line[i:]
                 break
             }
         } 
-        line = line[offset:]
         for ch, i in line {
             if ch >= '0' && ch <= '9' {
                 r.rest_time = r.rest_time * 10 + int(ch - '0')
