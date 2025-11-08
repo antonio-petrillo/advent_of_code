@@ -1,0 +1,33 @@
+#+title: Advent of Code
+#+author: Antonio Petrillo
+
+* Solutions for [[https://adventofcode.com/][Advent of Code]] challenges
+* 2015 [18/25]
++ [X] day 1
++ [X] day 2 
++ [X] day 3
++ [X] day 4 - very interesting
++ [X] day 5
++ [X] day 6
++ [X] day 7 - very interesting
++ [X] day 8
++ [X] day 9
++ [X] day 10
++ [X] day 11
++ [X] day 12
++ [X] day 13 - just a TSP
++ [X] day 14
++ [X] day 15 - implemented using brute force 
+  + Can be improved with a constraint optimization
++ [ ] day 16
++ [ ] day 17
++ [X] day 18 - implemented using 2 strategies
+  + bound check: check each time if the new position is inside the board
+  + *NO* bound check: pad the board with 2 extra rows and 2 extra cols so I don't need to check the position is inside the board
++ [ ] day 19
++ [X] day 20
++ [ ] day 21
++ [ ] day 22
++ [X] day 23
++ [ ] day 24
++ [-] day 25

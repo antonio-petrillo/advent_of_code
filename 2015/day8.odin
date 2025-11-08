@@ -50,6 +50,7 @@ main :: proc() {
     raw_data := #load("day8.txt")
 
     lines := bytes.split(raw_data, []byte{'\n'})
+    defer delete(lines)
     lines = lines[:len(lines) - 1]
 
     p1 := part_1(lines)

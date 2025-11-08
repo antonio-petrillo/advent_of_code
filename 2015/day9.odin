@@ -70,10 +70,7 @@ dfs_rec :: proc(g: ^Graph, start: City, visited: ^City_Visited, current_cost: Co
 dfs :: proc(g: ^Graph, compare: Compare_Cost_Fn) -> Cost {
     visited: City_Visited
 
-    min_cost := -1 & (1 << 32) // max 32 int
-
     cost: Maybe(Cost)
-
     for city in City {
         visited += { city }
 

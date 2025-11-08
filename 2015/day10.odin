@@ -54,10 +54,12 @@ main :: proc() {
         data := parse_data(raw_data)
         p1 := part_1(data)
         fmt.println("part 1 =>", p1)
+        delete(data)
     }
     { // part 2
         data := parse_data(raw_data)
         p2 := part_2(data)
         fmt.println("part 2 =>", p2)
+        delete(data)
     }
 }

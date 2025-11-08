@@ -49,8 +49,10 @@ parse_input :: proc(raw_data: []byte) -> map[Wire]Ast {
     circuit := make(map[Wire]Ast)
 
     lines := bytes.split(raw_data, []byte{'\n'})
+    defer delete(lines)
     for line in lines[:len(lines) - 1] { // skip last blank line
         tokens := bytes.split(line, []byte{' '})
+        defer delete(tokens)
         switch len(tokens) {
         case 5:
 

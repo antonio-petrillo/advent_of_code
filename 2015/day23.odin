@@ -33,6 +33,7 @@ parse_instructions :: proc(raw_data: []byte) -> [dynamic]Op {
     instructions := make([dynamic]Op)
     parse_loop: for line, asdf in bytes.split(raw_data, []byte{'\n'}) {
         tokens := bytes.split(line, []byte{' '}) 
+        defer delete(tokens)
         if len(tokens) < 2 do continue
         offset_index := 2
         op: Op

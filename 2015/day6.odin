@@ -163,7 +163,10 @@ part_2 :: proc(instructions: [dynamic]Instruction) -> (brightness: int) {
 main :: proc() {
     raw_lines := bytes.split(raw_data, []byte{'\n'})
     instructions := parse_instructions(raw_lines)
-    defer delete(instructions)
+    defer {
+        delete(raw_lines)
+        delete(instructions)
+    }
 
     p1 := part_1(instructions)
     fmt.printf("part 1 => %d\n", p1)

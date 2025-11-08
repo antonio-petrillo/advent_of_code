@@ -13,7 +13,7 @@ Knight :: enum {
     Frank,
     George,
     Mallory,
-    Ntonio,
+    Ntonio, // Hey it's me!
 }
 
 name_to_knights :: proc(name: string) -> (k: Knight) {

@@ -52,6 +52,5 @@ main :: proc() {
 
     p1 := part_1(target_pos)
 
-    fmt.printf("Part 1 sol := %d\n", p1) 
-
+    fmt.printfln("Part 1 => %d", p1) 
 }
