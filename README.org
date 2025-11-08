@@ -25,9 +25,9 @@
   + bound check: check each time if the new position is inside the board
   + *NO* bound check: pad the board with 2 extra rows and 2 extra cols so I don't need to check the position is inside the board
 + [ ] day 19
-+ [X] day 20
++ [X] day 20 - first use of parapoly
 + [ ] day 21
 + [ ] day 22
-+ [X] day 23
++ [X] day 23 - very interesting
 + [ ] day 24
 + [-] day 25

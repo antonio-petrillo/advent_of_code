@@ -35,9 +35,9 @@ sum_of_factors :: proc(n: int, limit: Maybe(int) = nil) -> int {
     return sum
 }
 
-solution :: proc(target, mul_factor: int, limit: Maybe(int) = nil) -> int {
+solution :: proc(target: int, $MUL_FACTOR: int, limit: Maybe(int) = nil) -> int {
     for i := 1; ; i += 1 {
-        sum := sum_of_factors(i, limit) * mul_factor
+        sum := sum_of_factors(i, limit) * MUL_FACTOR
         if sum >= target {
             return i
         }
