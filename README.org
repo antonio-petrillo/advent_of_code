@@ -2,7 +2,7 @@
 #+author: Antonio Petrillo
 
 * Solutions for [[https://adventofcode.com/][Advent of Code]] challenges
-* 2015 [18/25]
+* 2015 [19/25]
 + [X] day 1
 + [X] day 2 
 + [X] day 3
@@ -17,13 +17,14 @@
 + [X] day 12
 + [X] day 13 - just a TSP
 + [X] day 14
-+ [X] day 15 - implemented using brute force 
++ [X] day 15 - implemented using brute force
   + Can be improved with a constraint optimization
-+ [ ] day 16
++ [X] day 16 - improve using RTTI (a.k.a. reflection)
 + [ ] day 17
 + [X] day 18 - implemented using 2 strategies
   + bound check: check each time if the new position is inside the board
   + *NO* bound check: pad the board with 2 extra rows and 2 extra cols so I don't need to check the position is inside the board
+  + In my tests I didn't find any particular difference between the twos.
 + [ ] day 19
 + [X] day 20 - first use of parapoly
 + [ ] day 21
