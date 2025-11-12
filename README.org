@@ -20,12 +20,13 @@
 + [X] day 15 - implemented using brute force
   + Can be improved with a constraint optimization
 + [X] day 16 - improve using RTTI (a.k.a. reflection)
-+ [X] day 17
++ [X] day 17 - interesting
 + [X] day 18 - implemented using 2 strategies
   + bound check: check each time if the new position is inside the board
   + *NO* bound check: pad the board with 2 extra rows and 2 extra cols so I don't need to check the position is inside the board
   + In my tests I didn't find any particular difference between the twos.
-+ [ ] day 19
++ [X] day 19 - couldn't solve on my own part 2:
+  + I searched on [[https://www.reddit.com/r/adventofcode/comments/3xflz8/comment/cy4etju][reddit]] for a help and I found an incredible approach 
 + [X] day 20 - first use of parapoly
 + [X] day 21 - with a little bit of math the solution can be improved quite a lot
 + [ ] day 22
