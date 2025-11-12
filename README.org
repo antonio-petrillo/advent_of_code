@@ -2,7 +2,7 @@
 #+author: Antonio Petrillo
 
 * Solutions for [[https://adventofcode.com/][Advent of Code]] challenges
-* 2015 [21/25]
+* 2015 [23/25]
 + [X] day 1
 + [X] day 2 
 + [X] day 3
@@ -29,7 +29,7 @@
   + I searched on [[https://www.reddit.com/r/adventofcode/comments/3xflz8/comment/cy4etju][reddit]] for a help and I found an incredible approach 
 + [X] day 20 - first use of parapoly
 + [X] day 21 - with a little bit of math the solution can be improved quite a lot
-+ [ ] day 22
++ [X] day 22 - Really fun to do but a lot of edge cases to consider 
 + [X] day 23 - very interesting
 + [ ] day 24
 + [-] day 25
