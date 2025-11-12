@@ -2,7 +2,7 @@
 #+author: Antonio Petrillo
 
 * Solutions for [[https://adventofcode.com/][Advent of Code]] challenges
-* 2015 [20/25]
+* 2015 [21/25]
 + [X] day 1
 + [X] day 2 
 + [X] day 3
@@ -25,7 +25,8 @@
   + bound check: check each time if the new position is inside the board
   + *NO* bound check: pad the board with 2 extra rows and 2 extra cols so I don't need to check the position is inside the board
   + In my tests I didn't find any particular difference between the twos.
-+ [-] day 19 - completed only part 1, maybe my favorite one
++ [X] day 19 - completed only part 1:
+  + couldn't solve on my own, I searched on [[https://www.reddit.com/r/adventofcode/comments/3xflz8/comment/cy4etju][reddit]] for a help and I found an incredible approach 
 + [X] day 20 - first use of parapoly
 + [ ] day 21
 + [ ] day 22
