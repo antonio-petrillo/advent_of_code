@@ -214,7 +214,6 @@ main :: proc() {
     input := #load("day21.txt") 
 
     boss := parse_character(input)
-    fmt.println(boss)
 
     configs := create_configs()
     defer delete(configs)
