@@ -1,7 +1,6 @@
 package main 
 
 import "core:fmt"
-import "core:c/libc"
 import "core:bytes"
 
 Character :: struct {
