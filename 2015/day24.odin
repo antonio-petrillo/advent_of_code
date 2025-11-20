@@ -4,7 +4,7 @@ import "core:bytes"
 import "core:fmt"
 import "core:os"
 
-import "./utils"
+import "../utils"
 
 parse_number :: proc(bs: []byte) -> (n: int) {
     for b in bs {
@@ -15,7 +15,7 @@ parse_number :: proc(bs: []byte) -> (n: int) {
 
 parse_weights :: proc(input: []byte) -> []int {
     weights := make([dynamic]int)
-    lines := bytes.split(input, []byte{'\n'})
+    lines := bytes.split(input, []byte{'\r', '\n'})
     defer delete(lines)
 
     for line in lines[:len(lines) - 1] {
@@ -37,8 +37,8 @@ balance :: proc(weights: []int, parts: int) -> int {
     min_entanglements: Maybe(int) = nil 
 
     size := len(weights) 
-    for i in 1..=size {
-        iter, err_iter := utils.make_combination_iterator(weights, uint(i))
+    for i in 1..<size {
+        iter, err_iter := utils.make_combination_iterator(weights, i)
         assert(err_iter == nil)
         defer utils.destroy_combination_iterator(iter)
 
