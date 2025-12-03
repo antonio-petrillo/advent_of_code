@@ -1,6 +1,7 @@
 package utils
 
 import "base:runtime"
+
 import "core:bytes"
 
 Combination_Iterator :: struct($T: typeid) {
@@ -115,4 +116,22 @@ bytes_read_lines :: proc(input: []byte, allocator := context.allocator, skip_las
     }
 
     return lines
+}
+
+parse_number :: proc(input: []byte) -> (n: int) {
+    input := input
+    sign := -1 
+
+    i := 0
+    for input[i] == '-' {
+        sign *= -1
+        i += 1
+    }
+    input = input[i:]
+
+    for b in input {
+        n = n * 10 + int(b - '0') 
+    }
+
+    return sign * n
 }
