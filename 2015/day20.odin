@@ -1,11 +1,13 @@
 package main
 
+import "../utils"
+
 import "base:intrinsics"
 import "core:fmt"
 import "core:slice"
 
 parse_data :: proc(raw: []byte) -> (id: int) {
-    for b in raw[:len(raw) - 1] {
+    for b in raw[:len(raw) - (ODIN_OS == .Windows ? 2 : 1)] {
         id = id * 10 + int(b - '0')
     }
     return

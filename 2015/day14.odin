@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 
@@ -20,9 +22,9 @@ Reindeer :: struct {
 }
 
 // pretty dirty parsing
-parse_data :: proc(raw: []byte) -> [dynamic]Reindeer {
+parse_data :: proc(raw: []byte) -> []Reindeer {
     reindeers := make([dynamic]Reindeer)
-    lines := bytes.split(raw, []byte{'\n'})
+    lines := utils.bytes_read_lines(raw)
     defer delete(lines)
     for &line, j in lines[:len(lines) - 1] {
         r: Reindeer
@@ -70,10 +72,10 @@ parse_data :: proc(raw: []byte) -> [dynamic]Reindeer {
         r.remaining_time = r.flying_time
         append(&reindeers, r)
     }
-    return reindeers
+    return reindeers[:]
 }
 
-simulate_second :: proc(reindeers: [dynamic]Reindeer) -> int {
+simulate_second :: proc(reindeers: []Reindeer) -> int {
     max_dist := - 1
     for &r in reindeers {
         switch r.state {
@@ -96,7 +98,7 @@ simulate_second :: proc(reindeers: [dynamic]Reindeer) -> int {
     return max_dist
 }
 
-part1 :: proc(reindeers: [dynamic]Reindeer) -> int {
+part1 :: proc(reindeers: []Reindeer) -> int {
     for i in 0..<2503 {
         _ = simulate_second(reindeers)
     }
@@ -109,7 +111,7 @@ part1 :: proc(reindeers: [dynamic]Reindeer) -> int {
     return max_dist
 }
 
-part2 :: proc(reindeers: [dynamic]Reindeer) -> int {
+part2 :: proc(reindeers: []Reindeer) -> int {
     for i in 0..<2503 {
         max_dist := simulate_second(reindeers)
         for &r in reindeers {

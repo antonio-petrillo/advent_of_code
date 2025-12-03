@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:slice"
 import "core:strings"
@@ -33,14 +35,6 @@ name_to_knights :: proc(name: string) -> (k: Knight) {
     return 
 }
 
-parse_number :: proc(num_str: string) -> int {
-    n := 0
-    for ch in num_str {
-        n = n * 10 + int(ch - '0')
-    }
-    return n
-}
-
 parse_data :: proc(data: string) -> (knights: [Knight][Knight]int) {
     context.allocator = context.temp_allocator
     defer free_all(context.temp_allocator)
@@ -50,7 +44,7 @@ parse_data :: proc(data: string) -> (knights: [Knight][Knight]int) {
         line_without_dot_end, _ := strings.substring_to(line, len(line) - 1)
         parts := strings.fields(line_without_dot_end)
         from := name_to_knights(parts[0])
-        num := parse_number(parts[3])
+        num := utils.parse_number(parts[3])
         if parts[2] == "lose" { num *= -1 }
         to := name_to_knights(parts[len(parts) - 1])
 

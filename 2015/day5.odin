@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 
@@ -66,7 +68,7 @@ count_nice :: proc(lines: [][]u8, filter: proc([]u8) -> bool) -> (count: int) {
 }
 
 main :: proc() {
-    lines := bytes.split(raw_input, []byte{'\n'})
+    lines := utils.bytes_read_lines(raw_input)
     defer delete(lines)
 
     p1 := count_nice(lines, is_nice_p1)

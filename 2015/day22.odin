@@ -1,5 +1,7 @@
 package main 
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 
@@ -9,20 +11,13 @@ Character :: struct {
     mana: int,
 }
 
-parse_number :: proc(bs: []byte) -> (n: int) {
-    for b in bs {
-        n = n * 10 + int(b - '0')
-    }
-    return
-}
-
 parse_boss :: proc(input: []byte) -> (c: Character) {
-    lines := bytes.split(input, []byte{'\n'})
+    lines := utils.bytes_read_lines(input)
     defer delete(lines)
     l1 := len(lines[0])
-    c.hp = parse_number(lines[0][l1-2:])
+    c.hp = utils.parse_number(lines[0][l1-2:])
     l2 := len(lines[1])
-    c.damage = parse_number(lines[1][l2-2:])
+    c.damage = utils.parse_number(lines[1][l2-2:])
     return
 }
 

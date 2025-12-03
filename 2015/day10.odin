@@ -3,24 +3,25 @@ package main
 import "core:fmt"
 import "core:slice"
 
-parse_data :: proc(raw_data: []byte) -> [dynamic]byte {
+parse_data :: proc(raw_data: []byte) -> []byte {
     data := make([dynamic]byte)
-    for i := 0 ; i < len(raw_data) - 1; i += 1 {
-        append(&data, raw_data[i] - '0')
+    for b, i in raw_data {
+        if b < '0' || b > '9' { break }
+        append(&data, b - '0')
     }
-    return data
+    return data[:]
 }
 
-part_1 :: proc(data: [dynamic]byte) -> (result: int) {
+part_1 :: proc(data: []byte) -> (result: int) {
     return solution(data, 40)
 }
 
-part_2 :: proc(data: [dynamic]byte) -> (result: int) {
+part_2 :: proc(data: []byte) -> (result: int) {
     return solution(data, 50)
 }
 
-solution :: proc(data: [dynamic]byte, n: int) -> (result: int) {
-    data := data
+solution :: proc(data: []byte, n: int) -> (result: int) {
+    data := slice.clone_to_dynamic(data)
     next := make([dynamic]byte)
     defer {
         delete(next)

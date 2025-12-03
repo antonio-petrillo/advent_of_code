@@ -1,5 +1,7 @@
 package main
 
+import "../utils" 
+
 import "core:bytes" 
 import "core:fmt"
 
@@ -49,9 +51,8 @@ part_2 :: proc(lines: [][]byte) -> int {
 main :: proc() {
     raw_data := #load("day8.txt")
 
-    lines := bytes.split(raw_data, []byte{'\n'})
+    lines := utils.bytes_read_lines(raw_data)
     defer delete(lines)
-    lines = lines[:len(lines) - 1]
 
     p1 := part_1(lines)
     fmt.printf("part 1 => %d\n", p1)

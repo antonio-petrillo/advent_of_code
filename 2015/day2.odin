@@ -9,7 +9,7 @@ Box :: struct {
     l: int,
 }
 
-parse_boxes :: proc(data: []u8) -> [dynamic]Box {
+parse_boxes :: proc(data: []u8) -> []Box {
     boxes := make([dynamic]Box)
 
     i := 0
@@ -32,8 +32,8 @@ parse_boxes :: proc(data: []u8) -> [dynamic]Box {
         }
         l := 0
         for j := i; true ; j += 1 {
-            if data[j] == '\n' || j == len(boxes) - 1 {
-                i = j + 1
+            if data[j] == '\r' || data[j] == '\n' || j == len(boxes) - 1 {
+                i = j + (data[j] == '\r' ? 2 : 1)
                 break
             }
             l = l * 10 + int(data[j]) - '0'
@@ -41,10 +41,10 @@ parse_boxes :: proc(data: []u8) -> [dynamic]Box {
         append(&boxes, Box{w, h, l})
     }
     
-    return boxes
+    return boxes[:]
 }
 
-part_1 :: proc(boxes: [dynamic]Box) -> (total_surface: int) {
+part_1 :: proc(boxes: []Box) -> (total_surface: int) {
     for box in boxes {
         wh := box.w * box.h 
         min := wh
@@ -62,7 +62,7 @@ part_1 :: proc(boxes: [dynamic]Box) -> (total_surface: int) {
     return
 } 
 
-part_2 :: proc(boxes: [dynamic]Box) -> (total: int) {
+part_2 :: proc(boxes: []Box) -> (total: int) {
     for box in boxes {
         wwhh := box.w * 2 + box.h * 2
         min := wwhh

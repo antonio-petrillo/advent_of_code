@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:bytes"
 import "core:fmt"
 
@@ -17,7 +19,7 @@ Instruction :: struct {
     action: Action,
 }
 
-parse_instructions :: proc(lines: [][]u8) -> [dynamic]Instruction {
+parse_instructions :: proc(lines: [][]u8) -> []Instruction {
     parsed := make([dynamic]Instruction)
     turn_on := transmute([]byte)string("turn on")
     turn_off := transmute([]byte)string("turn off")
@@ -69,14 +71,14 @@ parse_instructions :: proc(lines: [][]u8) -> [dynamic]Instruction {
         instr.end[1] = acc
         append(&parsed, instr)
     }  
-    return parsed
+    return parsed[:]
 }
 
 pair_to_index :: #force_inline proc(i,j, col_size: int) -> int {
     return i * col_size + j
 }
 
-part_1 :: proc(instructions: [dynamic]Instruction) -> (count: int) {
+part_1 :: proc(instructions: []Instruction) -> (count: int) {
     board := make([]bool, 1000*1000)
     defer delete(board)
 
@@ -118,7 +120,7 @@ part_1 :: proc(instructions: [dynamic]Instruction) -> (count: int) {
     return 
 }
 
-part_2 :: proc(instructions: [dynamic]Instruction) -> (brightness: int) {
+part_2 :: proc(instructions: []Instruction) -> (brightness: int) {
     board := make([]int, 1000*1000)
     defer delete(board)
 
@@ -161,7 +163,8 @@ part_2 :: proc(instructions: [dynamic]Instruction) -> (brightness: int) {
 }
 
 main :: proc() {
-    raw_lines := bytes.split(raw_data, []byte{'\n'})
+    raw_data := #load("day6.txt")
+    raw_lines := utils.bytes_read_lines(raw_data)
     instructions := parse_instructions(raw_lines)
     defer {
         delete(raw_lines)

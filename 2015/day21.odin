@@ -1,6 +1,8 @@
 #+feature dynamic-literals
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:slice"
 
@@ -9,13 +11,6 @@ Character :: struct {
     damage: int,
     armor: int, 
     cost_equip: int,
-}
-
-parse_number :: proc(bs: []byte) -> (n: int) {
-    for b in bs {
-        n = n * 10 + int(b - '0')
-    }
-    return
 }
 
 advance_until :: proc(bs: []byte, offset: ^int, pred: proc(b: byte) -> bool) {
@@ -70,19 +65,19 @@ parse_character :: proc(input: []byte) -> (c: Character) {
     advance_until(input, &i, is_not_num)
     offset := i
     advance_until(input, &offset, is_num)
-    c.hp = parse_number(input[i:offset])
+    c.hp = utils.parse_number(input[i:offset])
 
     i = offset
     advance_until(input, &i, is_not_num)
     offset = i
     advance_until(input, &offset, is_num)
-    c.damage = parse_number(input[i:offset])
+    c.damage = utils.parse_number(input[i:offset])
 
     i = offset
     advance_until(input, &i, is_not_num)
     offset = i
     advance_until(input, &offset, is_num)
-    c.armor = parse_number(input[i:offset])
+    c.armor = utils.parse_number(input[i:offset])
     
     return
 }

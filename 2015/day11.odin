@@ -63,7 +63,7 @@ part_1 :: proc(passwd: []byte) -> string {
 main :: proc() {
     // note that #load put data into BSS so it's immutable (it's part of the binary)
     input := #load("day11.txt")
-    input = input[:len(input) - 1] // discard 'newline'
+    input = input[:len(input) - (ODIN_OS == .Windows ? 2 : 1)] // discard 'newline'
 
     p1 := part_1(input)
     fmt.println("part 1 =>", p1)

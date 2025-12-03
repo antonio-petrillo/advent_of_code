@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:bytes"
 import "core:fmt"
 
@@ -11,10 +13,8 @@ Grid :: [Height][Width]bool
 parse_data :: proc(raw: []byte) -> ^Grid {
     g := new(Grid)
 
-    lines := bytes.split(raw, []byte{'\n'})
+    lines := utils.bytes_read_lines(raw)
     defer delete(lines)
-
-    lines = lines[:len(lines) - 1]
 
     i := 0
     for line in lines {

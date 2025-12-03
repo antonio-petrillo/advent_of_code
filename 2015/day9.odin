@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 
@@ -29,13 +31,10 @@ bytes_to_City :: proc(b: ^[]byte) -> (c: City) {
 }
 
 parse_data_into_graph :: proc(g: ^Graph, raw_data: []byte) {
-    lines := bytes.split(raw_data, []byte{'\n'})
-    for line in lines[:len(lines) - 1] {
+    lines := utils.bytes_read_lines(raw_data)
+    for line in lines {
         tokens := bytes.split(line, []byte{' '}) 
-        acc := 0
-        for b in tokens[4] {
-            acc = acc * 10 + int(b - '0')
-        }
+        acc := utils.parse_number(tokens[4])
         from := bytes_to_City(&tokens[0])
         to := bytes_to_City(&tokens[2])
         g[from][to] = acc 

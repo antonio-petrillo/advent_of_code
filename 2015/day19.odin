@@ -6,7 +6,6 @@ import "core:strings"
 import "core:text/regex"
 
 
-
 Replacement :: struct {
     from: string,
     to: string,
@@ -14,11 +13,13 @@ Replacement :: struct {
 
 parse_input :: proc(input: string) -> ([]Replacement, string) {
     replacements := make([dynamic]Replacement)
-    parts := strings.split(input, "\n\n")
+    parts := strings.split(input, ODIN_OS == .Windows ? "\r\n\r\n" : "\n\n")
     defer delete(parts)
     assert(len(parts) == 2)
 
-    iter, err := regex.create_iterator(parts[0], "(\\w+) => (\\w+)\n")
+    regex_litearl := ODIN_OS == .Windows ? "(\\w+) => (\\w+)\r\n" :  "(\\w+) => (\\w+)\n"
+
+    iter, err := regex.create_iterator(parts[0], regex_litearl)
     if err != nil {
         fmt.println(err)
         os.exit(1)

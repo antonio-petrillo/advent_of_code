@@ -6,20 +6,13 @@ import "core:os"
 
 import "../utils"
 
-parse_number :: proc(bs: []byte) -> (n: int) {
-    for b in bs {
-        n = n * 10 + int(b - '0')
-    }
-    return
-}
-
 parse_weights :: proc(input: []byte) -> []int {
     weights := make([dynamic]int)
     lines := bytes.split(input, []byte{'\r', '\n'})
     defer delete(lines)
 
     for line in lines[:len(lines) - 1] {
-        append(&weights, parse_number(line))
+        append(&weights, utils.parse_number(line))
     }
 
     return weights[:]

@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 
@@ -32,8 +34,6 @@ Ast :: union{
     Data,
 }
 
-raw_data := #load("day7.txt")
-
 parse_data :: proc(data: []byte) -> Data {
     if data[0] >= '0' && data[0] <= '9' {
         acc: Signal = 0 
@@ -48,9 +48,10 @@ parse_data :: proc(data: []byte) -> Data {
 parse_input :: proc(raw_data: []byte) -> map[Wire]Ast {
     circuit := make(map[Wire]Ast)
 
-    lines := bytes.split(raw_data, []byte{'\n'})
+    lines := utils.bytes_read_lines(raw_data)
     defer delete(lines)
-    for line in lines[:len(lines) - 1] { // skip last blank line
+
+    for line in lines { // skip last blank line
         tokens := bytes.split(line, []byte{' '})
         defer delete(tokens)
         switch len(tokens) {
@@ -133,6 +134,7 @@ part_2 :: proc(circuit: map[Wire]Ast) -> Signal {
 }
 
 main :: proc() {
+    raw_data := #load("day7.txt")
     circuit := parse_input(raw_data) 
     defer delete(circuit)
 

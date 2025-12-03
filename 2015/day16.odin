@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:os"
 import "core:text/regex"
@@ -23,15 +25,8 @@ Pair :: struct {
     v: int,
 }
 
-parse_number :: proc(str: string) -> (n: int) {
-    for ch in str {
-        n = n * 10 + int(ch - '0')
-    }
-    return
-}
-
 parse_key_param :: proc(key, val: string, sue: ^Sue) {
-    val := parse_number(val)
+    val := utils.parse_number(val)
     switch key {
     case "children": 
         sue.children = val
@@ -56,10 +51,21 @@ parse_key_param :: proc(key, val: string, sue: ^Sue) {
     }
 }
 
+when ODIN_OS == .Windows {
+    @(private = "file")
+    @(rodata)
+    regex_literal :=  "Sue (\\d+): (\\w+): (\\d+), (\\w+): (\\d+), (\\w+): (\\d+)\r\n"
+    
+} else {
+    @(private = "file")
+    @(rodata)
+    regex_literal :=  "Sue (\\d+): (\\w+): (\\d+), (\\w+): (\\d+), (\\w+): (\\d+)\n"
+}
+
 parse_aunts_sue :: proc(input: string) -> [dynamic]Sue {
     aunts := make([dynamic]Sue)
 
-    iter, err_iter := regex.create_iterator(input, "Sue (\\d+): (\\w+): (\\d+), (\\w+): (\\d+), (\\w+): (\\d+)\n")
+    iter, err_iter := regex.create_iterator(input, regex_literal)
     if err_iter != nil {
         fmt.println(err_iter)
         os.exit(1)
@@ -79,7 +85,7 @@ parse_aunts_sue :: proc(input: string) -> [dynamic]Sue {
             cars = -1,
             perfumes = -1,
         }
-        sue.id = parse_number(aunt.groups[1])
+        sue.id = utils.parse_number(aunt.groups[1])
 
         parse_key_param(aunt.groups[2], aunt.groups[3], &sue)
         parse_key_param(aunt.groups[4], aunt.groups[5], &sue)

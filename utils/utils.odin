@@ -98,14 +98,14 @@ combine :: proc(iter: ^Combination_Iterator($T)) -> (ok: bool) #no_bounds_check 
 }
 
 
-when ODIN_OS == .Linux {
-    @(private="file")
-    @(rodata)
-    bytes_line_separator := []byte{'\n'}
-} else {
+when ODIN_OS == .Windows {
     @(private="file")
     @(rodata)
     byte_line_separator := []byte{'\r', '\n'}
+} else {
+    @(private="file")
+    @(rodata)
+    bytes_line_separator := []byte{'\n'}
 }
 
 bytes_read_lines :: proc(input: []byte, allocator := context.allocator, skip_last_empty_line: bool = true) -> [][]byte {
@@ -118,13 +118,17 @@ bytes_read_lines :: proc(input: []byte, allocator := context.allocator, skip_las
     return lines
 }
 
-parse_number :: proc(input: []byte) -> (n: int) {
+parse_number_from_string :: proc(input: string) -> (n: int) {
+    return parse_number_from_bytes(transmute([]byte)input)
+}
+
+parse_number_from_bytes :: proc(input: []byte) -> (n: int) {
     input := input
-    sign := -1 
+    sign := 1 
 
     i := 0
-    for input[i] == '-' {
-        sign *= -1
+    for input[i] == '-' || input[i] == '+' {
+        sign *=  input[i] == '-' ? -1 : 1
         i += 1
     }
     input = input[i:]
@@ -134,4 +138,9 @@ parse_number :: proc(input: []byte) -> (n: int) {
     }
 
     return sign * n
+}
+
+parse_number :: proc{
+    parse_number_from_bytes,
+    parse_number_from_string,
 }

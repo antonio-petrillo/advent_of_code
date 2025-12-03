@@ -1,28 +1,23 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 import "core:os"
 import "core:slice"
 import "core:container/queue"
 
-parse_number :: proc(str: []byte) -> (n: int) {
-    for ch in str {
-        n = n * 10 + int(ch - '0') 
-    }
-    return
-}
-
-parse_input :: proc(input: []byte) -> [dynamic]int {
-    lines := bytes.split(input, []byte{'\n'})
+parse_input :: proc(input: []byte) -> []int {
+    lines := utils.bytes_read_lines(input)
     defer delete(lines)
 
     containers := make([dynamic]int)
-    for line in lines[:len(lines) -1] {
-        append(&containers, parse_number(line))
+    for line in lines {
+        append(&containers, utils.parse_number(line))
     }
 
-    return containers
+    return containers[:]
 }
 
 part_1 :: proc($TARGET: int, containers: []int) -> int {

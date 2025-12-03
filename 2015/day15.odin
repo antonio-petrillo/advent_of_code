@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:os"
 import "core:strings"
@@ -14,15 +16,6 @@ import "core:text/regex"
 /*     calories: int, */
 /* } */
 Properties :: [5]int
-
-parse_number :: proc(str: string) -> (n: int) {
-    sign := str[0] == '-' ? -1 : 1
-    start := sign == 1 ? 0 : 1
-    for ch in str[start:] {
-        n = n * 10 + int(ch - '0') 
-    }
-    return n * sign
-}
 
 parse_properties :: proc(raw: string) -> ([4][4]int, [4]int) {
     raw := raw
@@ -39,15 +32,15 @@ parse_properties :: proc(raw: string) -> ([4][4]int, [4]int) {
     i := 0
     for capacity_str in regex.match_iterator(&iter)  {
         prop: Properties
-        ingrediends[i][0] = parse_number(capacity_str.groups[0])
+        ingrediends[i][0] = utils.parse_number(capacity_str.groups[0])
         durability_str, _, _ := regex.match_iterator(&iter)
-        ingrediends[i][1] = parse_number(durability_str.groups[0])
+        ingrediends[i][1] = utils.parse_number(durability_str.groups[0])
         flavor_str, _, _ := regex.match_iterator(&iter)
-        ingrediends[i][2] = parse_number(flavor_str.groups[0])
+        ingrediends[i][2] = utils.parse_number(flavor_str.groups[0])
         texture_str, _, _ := regex.match_iterator(&iter)
-        ingrediends[i][3] = parse_number(texture_str.groups[0])
+        ingrediends[i][3] = utils.parse_number(texture_str.groups[0])
         calories_str, _, _ := regex.match_iterator(&iter)
-        calories[i] = parse_number(calories_str.groups[0])
+        calories[i] = utils.parse_number(calories_str.groups[0])
         i += 1
     }
     

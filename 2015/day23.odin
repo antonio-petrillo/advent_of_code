@@ -1,5 +1,7 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:bytes"
 
@@ -20,18 +22,11 @@ Op :: struct {
     offset: int,
 }
 
-parse_number :: proc(data: []byte) -> int {
-    num := 0
-    sign := data[0] == '+' ? 1 : -1
-    for ch in data[1:] {
-        num = num * 10 + int(ch - '0')
-    }
-    return sign * num
-}
-
-parse_instructions :: proc(raw_data: []byte) -> [dynamic]Op {
+parse_instructions :: proc(raw_data: []byte) -> []Op {
     instructions := make([dynamic]Op)
-    parse_loop: for line, asdf in bytes.split(raw_data, []byte{'\n'}) {
+    lines := utils.bytes_read_lines(raw_data)
+    defer delete(lines)
+    parse_loop: for line in lines {
         tokens := bytes.split(line, []byte{' '}) 
         defer delete(tokens)
         if len(tokens) < 2 do continue
@@ -46,7 +41,7 @@ parse_instructions :: proc(raw_data: []byte) -> [dynamic]Op {
                     op.kind = .Jmp
                     offset_index = 1
             }
-            op.offset = parse_number(tokens[offset_index])
+            op.offset = utils.parse_number(tokens[offset_index])
 
         case 'h': op.kind = .Hlf
         case 'i': op.kind = .Inc
@@ -55,10 +50,10 @@ parse_instructions :: proc(raw_data: []byte) -> [dynamic]Op {
         op.reg_index = tokens[1][0] == 'a' ? 0 : 1
         append(&instructions, op)
     }
-    return instructions
+    return instructions[:]
 }
 
-compute :: proc(computer: ^Computer, ops: [dynamic]Op) -> u64 {
+compute :: proc(computer: ^Computer, ops: []Op) -> u64 {
     for pc := 0; pc < len(ops); pc += 1 {
         op := ops[pc]
         pre := pc
@@ -85,12 +80,12 @@ compute :: proc(computer: ^Computer, ops: [dynamic]Op) -> u64 {
     return computer[1]
 } 
 
-part_1 :: proc(ops: [dynamic]Op) -> u64 {
+part_1 :: proc(ops: []Op) -> u64 {
     computer: Computer
     return compute(&computer, ops)
 }
 
-part_2 :: proc(ops: [dynamic]Op) -> u64 {
+part_2 :: proc(ops: []Op) -> u64 {
     computer := Computer{1, 0}
     return compute(&computer, ops)
 }
