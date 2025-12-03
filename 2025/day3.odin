@@ -30,21 +30,22 @@ to_jolt :: proc(bs: []byte) -> int {
     return jolt
 }
 
-build_pack_of_size_from_bank :: proc(pack: Battery_Bank, $N: int) -> [N]byte {
-    res: [N]byte
+build_pack_of_size_from_bank :: proc(bank: Battery_Bank, $N: int) -> [N]byte {
+    pack: [N]byte
 
-    max_offset := len(pack) - N + 1
+    max_offset := len(bank) - N + 1
 
     start := 0
     for i in 0..<N {
-        window := pack[start:max_offset + i]
-        idx := slice.max_index(window) // don't check for 'ok'
-        res[i] = window[idx]
+        window := bank[start:max_offset + i]
+        idx, ok := slice.max_index(window) 
+        assert(ok)
+        pack[i] = window[idx]
         start += idx + 1
           
     }
     
-    return res
+    return pack
 }
 
 solve :: proc(batteries: []Battery_Bank, $N: int) -> int {
