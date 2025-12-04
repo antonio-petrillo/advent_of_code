@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:bytes"
 import "core:fmt"
+import "core:mem"
 
 raw_data := #load("day6.txt")
 
@@ -163,6 +164,12 @@ part_2 :: proc(instructions: []Instruction) -> (brightness: int) {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day6.txt")
     raw_lines := utils.bytes_read_lines(raw_data)
     instructions := parse_instructions(raw_lines)

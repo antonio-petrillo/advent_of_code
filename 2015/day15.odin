@@ -3,7 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
-import "core:os"
+import "core:mem"
 import "core:strings"
 import "core:text/regex"
 
@@ -23,10 +23,7 @@ parse_properties :: proc(raw: string) -> ([4][4]int, [4]int) {
     calories: [4]int
 
     iter, err_iter := regex.create_iterator(raw, "(-?\\d+)")
-    if err_iter != nil {
-        fmt.println(err_iter)
-        os.exit(1)
-    }
+    assert(err_iter == nil)
     defer regex.destroy_iterator(iter)
 
     i := 0
@@ -102,6 +99,12 @@ part_2 :: proc(ingredients: [4][4]int, calories: [4]int) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+ 
     raw_data := #load("day15.txt", string)
 
     ingrediends, calories := parse_properties(raw_data)

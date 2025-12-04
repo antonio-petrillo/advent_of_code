@@ -3,6 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
+import "core:mem"
 import "core:bytes"
 
 Computer :: [2]u64
@@ -91,6 +92,12 @@ part_2 :: proc(ops: []Op) -> u64 {
 }
  
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day23.txt")
     instructions := parse_instructions(raw_data)
     defer delete(instructions)

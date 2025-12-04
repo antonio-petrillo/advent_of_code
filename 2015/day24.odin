@@ -3,6 +3,7 @@ package main
 import "core:bytes"
 import "core:fmt"
 import "core:os"
+import "core:mem"
 
 import "../utils"
 
@@ -67,6 +68,12 @@ part_2 :: proc(weights: []int) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     input := #load("day24.txt")
     weights := parse_weights(input)
 

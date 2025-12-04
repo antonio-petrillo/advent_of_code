@@ -1,7 +1,9 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
-import "core:os"
+import "core:mem"
 import "core:strings"
 import "core:text/regex"
 
@@ -20,10 +22,7 @@ parse_input :: proc(input: string) -> ([]Replacement, string) {
     regex_litearl := ODIN_OS == .Windows ? "(\\w+) => (\\w+)\r\n" :  "(\\w+) => (\\w+)\n"
 
     iter, err := regex.create_iterator(parts[0], regex_litearl)
-    if err != nil {
-        fmt.println(err)
-        os.exit(1)
-    }
+    assert(err == nil)
     defer regex.destroy_iterator(iter)
 
     for match in regex.match_iterator(&iter) {
@@ -54,10 +53,7 @@ part_1 :: proc(mappings: []Replacement, start: string) -> int {
 
     for replacement in mappings {
         iter, err_iter := regex.create_iterator(start, replacement.from)
-        if err_iter != nil {
-            fmt.println(err_iter)
-            os.exit(1)
-        }
+        assert(err_iter == nil)
         defer regex.destroy_iterator(iter)
 
         for match in regex.match_iterator(&iter) {
@@ -120,10 +116,16 @@ part_2 :: proc(target: string) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     input := #load("day19.txt", string)
 
     mappings, start := parse_input(input)
-   defer free_all(context.temp_allocator)
+    defer delete(mappings)
     { // part 1
         p1 := part_1(mappings, start)
         fmt.println("part 1 =>", p1)

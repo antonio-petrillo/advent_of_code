@@ -1,9 +1,9 @@
-#+feature dynamic-literals
 package main
 
 import "../utils"
 
 import "core:fmt"
+import "core:mem"
 import "core:slice"
 
 Character :: struct {
@@ -206,6 +206,12 @@ part_2 :: proc(configs: []Character, boss: Character) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     input := #load("day21.txt") 
 
     boss := parse_character(input)

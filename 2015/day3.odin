@@ -1,6 +1,9 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
+import "core:mem"
 
 part_1 :: proc(data: []u8) -> int {
     visited := make(map[[2]int]int)
@@ -57,6 +60,12 @@ part_2 :: proc(data: []u8) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     data := #load("day3.txt") 
 
     p1 := part_1(data)

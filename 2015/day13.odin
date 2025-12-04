@@ -3,6 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
+import "core:mem"
 import "core:slice"
 import "core:strings"
 
@@ -79,6 +80,12 @@ max_happiness :: proc(happiness_costs: [Knight][Knight]int, other_knights: []Kni
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     data := #load("day13.txt", string)
     knights := parse_data(data)
     p1 := max_happiness(knights, []Knight{.Bob, .Carol, .David, .Eric, .Frank, .George, .Mallory })

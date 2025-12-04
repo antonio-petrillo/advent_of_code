@@ -3,6 +3,7 @@ package main
 import "../utils"
 
 import "core:bytes"
+import "core:mem"
 import "core:fmt"
 
 Height :: 102
@@ -104,6 +105,12 @@ part_2 :: proc(g: ^Grid) -> int #no_bounds_check  {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day18.txt")
     {// part 1
         grid := parse_data(raw_data)

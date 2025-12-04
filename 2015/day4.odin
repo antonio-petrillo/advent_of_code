@@ -1,5 +1,8 @@
 package main
 
+import "../utils"
+
+import "core:mem"
 import "core:fmt"
 import "core:crypto/legacy/md5"
 
@@ -49,6 +52,12 @@ mine_coins :: proc(secret: []byte, valid: proc([]byte) -> bool) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     p1 := mine_coins(secret, is_valid_part_1) 
     fmt.printf("part 1 => %d\n", p1)
     

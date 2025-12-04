@@ -1,7 +1,10 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:slice"
+import "core:mem"
 
 // can be done better, but it's not trivial to do since
 // the indexes of 'inc sequence' and 'double pair' move at
@@ -61,6 +64,12 @@ part_1 :: proc(passwd: []byte) -> string {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     // note that #load put data into BSS so it's immutable (it's part of the binary)
     input := #load("day11.txt")
     input = input[:len(input) - (ODIN_OS == .Windows ? 2 : 1)] // discard 'newline'

@@ -1,6 +1,8 @@
 package main
 
-import "core:os"
+import "../utils"
+
+import "core:mem"
 import "core:fmt"
 
 part_1 :: proc(instrs: []u8) -> int {
@@ -29,10 +31,14 @@ part_2 :: proc(instrs: []u8) -> int {
 }
 
 main :: proc() {
-    instrs, ok := os.read_entire_file_from_filename("day1.txt")
-    if !ok {
-        panic("Can't read input file")
-    }
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
+
+    instrs := #load("day1.txt")
     p1 := part_1(instrs)
     fmt.printf("Floor => %d\n", p1)
    

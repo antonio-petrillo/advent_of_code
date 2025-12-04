@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:fmt"
 import "core:bytes"
+import "core:mem"
 
 City :: enum u8 {
     AlphaCentauri,
@@ -31,9 +32,10 @@ bytes_to_City :: proc(b: ^[]byte) -> (c: City) {
 }
 
 parse_data_into_graph :: proc(g: ^Graph, raw_data: []byte) {
-    lines := utils.bytes_read_lines(raw_data)
+    defer free_all(context.temp_allocator)
+    lines := utils.bytes_read_lines(raw_data, context.temp_allocator)
     for line in lines {
-        tokens := bytes.split(line, []byte{' '}) 
+        tokens := bytes.split(line, []byte{' '}, allocator = context.temp_allocator) 
         acc := utils.parse_number(tokens[4])
         from := bytes_to_City(&tokens[0])
         to := bytes_to_City(&tokens[2])
@@ -101,6 +103,12 @@ part_2 :: proc(g: ^Graph) -> Cost  {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day9.txt")
     g: Graph
     parse_data_into_graph(&g, raw_data)

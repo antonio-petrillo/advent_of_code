@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:bytes"
 import "core:fmt"
+import "core:mem"
 import "core:strconv"
 
 parse_input :: proc(raw: []byte) -> []int {
@@ -62,6 +63,12 @@ part_2 :: proc(rotations: []int) -> (n: int) {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_input := #load("day1.txt")
     /* raw_input := #load("day1_example.txt") */
     /* raw_input := #load("day1_example_plus_5.txt") */

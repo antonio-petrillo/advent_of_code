@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:fmt"
 import "core:bytes"
+import "core:mem"
 
 Wire :: distinct string
 Signal :: distinct u16
@@ -134,6 +135,12 @@ part_2 :: proc(circuit: map[Wire]Ast) -> Signal {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+ 
     raw_data := #load("day7.txt")
     circuit := parse_input(raw_data) 
     defer delete(circuit)

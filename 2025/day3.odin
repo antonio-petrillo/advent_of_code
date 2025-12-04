@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:bytes"
 import "core:fmt"
+import "core:mem"
 import "core:slice"
 
 Battery_Bank :: #type []byte
@@ -60,6 +61,12 @@ solve :: proc(batteries: []Battery_Bank, $N: int) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     /* raw_input := #load("day3_example.txt") */
     raw_input := #load("day3.txt")
     raw_clone := bytes.clone(raw_input)

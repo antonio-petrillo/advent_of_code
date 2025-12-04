@@ -2,6 +2,8 @@ package utils
 
 import "base:runtime"
 
+import "core:fmt"
+import "core:mem"
 import "core:bytes"
 
 Combination_Iterator :: struct($T: typeid) {
@@ -143,4 +145,24 @@ parse_number_from_bytes :: proc(input: []byte) -> (n: int) {
 parse_number :: proc{
     parse_number_from_bytes,
     parse_number_from_string,
+}
+
+track_report :: proc(track: ^mem.Tracking_Allocator) {
+    if len(track.allocation_map) > 0 {
+        fmt.eprintf("=== %v allocations not freed: ===\n", len(track.allocation_map))
+        for _, entry in track.allocation_map {
+            fmt.eprintf("- %v bytes @ %v\n", entry.size, entry.location)
+        }
+    } else {
+        fmt.eprintfln("No mem leaked")
+    }
+    if len(track.bad_free_array) > 0 {
+        fmt.eprintf("=== %v incorrect frees: ===\n", len(track.bad_free_array))
+        for entry in track.bad_free_array {
+            fmt.eprintfln("- %p @ %v", entry.memory, entry.location)
+        }
+    } else {
+        fmt.eprintfln("No bad frees")
+    }
+    mem.tracking_allocator_destroy(track)
 }

@@ -3,7 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
-import "core:os"
+import "core:mem"
 import "core:text/regex"
 
 Sue :: struct {
@@ -66,10 +66,7 @@ parse_aunts_sue :: proc(input: string) -> [dynamic]Sue {
     aunts := make([dynamic]Sue)
 
     iter, err_iter := regex.create_iterator(input, regex_literal)
-    if err_iter != nil {
-        fmt.println(err_iter)
-        os.exit(1)
-    }
+    assert(err_iter == nil)
     defer regex.destroy_iterator(iter)
 
     for aunt in regex.match_iterator(&iter)  {
@@ -195,6 +192,12 @@ part_2 :: proc(input: string) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
 
     input := #load("day16.txt", string)
 

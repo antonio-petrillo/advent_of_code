@@ -3,6 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
+import "core:mem"
 
 Interval :: #type [2]int
 
@@ -94,6 +95,12 @@ part_2 :: proc(intervals: []Interval) -> (n: int) {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_input := #load("day2.txt")
     /* raw_input := #load("day2_example.txt") */
     intervals := parse_input(raw_input)

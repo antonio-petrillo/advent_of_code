@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:bytes" 
 import "core:fmt"
+import "core:mem"
 
 part_1 :: proc(lines: [][]byte) -> int {
     code_sum, literal_sum := 0, 0
@@ -49,6 +50,12 @@ part_2 :: proc(lines: [][]byte) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day8.txt")
 
     lines := utils.bytes_read_lines(raw_data)

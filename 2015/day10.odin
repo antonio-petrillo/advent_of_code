@@ -1,7 +1,10 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
 import "core:slice"
+import "core:mem"
 
 parse_data :: proc(raw_data: []byte) -> []byte {
     data := make([dynamic]byte)
@@ -50,6 +53,12 @@ solution :: proc(data: []byte, n: int) -> (result: int) {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day10.txt")
     { // part 1
         data := parse_data(raw_data)

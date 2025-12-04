@@ -4,6 +4,7 @@ import "../utils"
 
 import "core:fmt"
 import "core:bytes"
+import "core:mem"
 
 raw_input := #load("day5.txt")
 
@@ -68,6 +69,12 @@ count_nice :: proc(lines: [][]u8, filter: proc([]u8) -> bool) -> (count: int) {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     lines := utils.bytes_read_lines(raw_input)
     defer delete(lines)
 

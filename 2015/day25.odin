@@ -1,6 +1,9 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
+import "core:mem"
 
 starting :: 20151125
 multiplier :: 252533
@@ -47,10 +50,17 @@ part_1 :: proc(target_pos: [2]int) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day25.txt")
     target_pos := parse_pos(raw_data)
 
     p1 := part_1(target_pos)
 
     fmt.printfln("Part 1 => %d", p1) 
+    fmt.printfln("Part 2 => [NONE]") 
 }

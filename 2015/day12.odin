@@ -1,6 +1,9 @@
 package main
 
+import "../utils"
+
 import "core:fmt"
+import "core:mem"
 import "core:encoding/json"
 
 part_1 :: proc(value: ^json.Value) -> (sum: f64) {
@@ -48,6 +51,12 @@ part_2 :: proc(value: ^json.Value) -> (sum: f64) {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day12.txt")
     context.allocator = context.temp_allocator
     defer free_all(context.temp_allocator)

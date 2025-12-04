@@ -4,6 +4,7 @@ import "../utils"
 
 import "base:intrinsics"
 import "core:fmt"
+import "core:mem"
 import "core:slice"
 
 parse_data :: proc(raw: []byte) -> (id: int) {
@@ -49,6 +50,12 @@ solution :: proc(target: int, $MUL_FACTOR: int, limit: Maybe(int) = nil) -> int 
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day20.txt")
     target := parse_data(raw_data)
     { // part 1

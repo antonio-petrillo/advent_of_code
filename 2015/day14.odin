@@ -3,6 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
+import "core:mem"
 import "core:bytes"
 
 Reindeer_State :: enum {
@@ -128,6 +129,12 @@ part2 :: proc(reindeers: []Reindeer) -> int {
 }
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     raw_data := #load("day14.txt")
     { // part 1
         reindeers := parse_data(raw_data)

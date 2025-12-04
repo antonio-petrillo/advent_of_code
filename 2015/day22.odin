@@ -3,6 +3,7 @@ package main
 import "../utils"
 
 import "core:fmt"
+import "core:mem"
 import "core:bytes"
 
 Character :: struct {
@@ -183,6 +184,12 @@ dfs :: proc(wizard, enemy: ^Character, effects: ^Effects, turn, mana_spent: int,
 } 
 
 main :: proc() {
+    track: mem.Tracking_Allocator
+    mem.tracking_allocator_init(&track, context.allocator)
+    context.allocator = mem.tracking_allocator(&track)
+
+    defer utils.track_report(&track)
+
     input := #load("day22.txt")
     boss := parse_boss(input)
     wizard := Character{ hp = 50, mana = 500 }
