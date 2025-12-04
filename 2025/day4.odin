@@ -26,16 +26,21 @@ count_rolls :: proc(b: Board, p: Position) -> (n: int) {
     return 
 }
 
-part_1 :: proc(b: Board) -> (n: int) {
+solve :: proc(b: Board, $REMOVE: bool) -> (n: int) {
     for row, x in b {
-        for cell, y in row {
+        for &cell, y in row {
             if cell == '@' && count_rolls(b, {x, y}) < 4 {
                 n += 1
+                if REMOVE { cell = '.' }
             }
         }
     }
-    
+
     return
+}
+
+part_1 :: proc(b: Board) -> (n: int) {
+    return solve(b, false)
 }
 
 clone_board :: proc(b: Board, allocator := context.allocator) -> Board {
@@ -48,10 +53,10 @@ clone_board :: proc(b: Board, allocator := context.allocator) -> Board {
     return cloned
 }
 
-remove_rolls :: proc(b: ^Board) -> (n: int) {
-    for &row, x in b {
+remove_rolls :: proc(b: Board) -> (n: int) {
+    for row, x in b {
         for &cell, y in row {
-            if cell == '@' && count_rolls(b^, {x, y}) < 4 {
+            if cell == '@' && count_rolls(b, {x, y}) < 4 {
                 n += 1
                 cell = '.'
             }
@@ -61,10 +66,13 @@ remove_rolls :: proc(b: ^Board) -> (n: int) {
     return
 }
 
-part_2 :: proc(b: ^Board) -> (n: int) {
+part_2 :: proc(b: Board) -> (n: int) {
+    context.allocator = context.temp_allocator
+    defer free_all(context.allocator)
+    b := clone_board(b)
 
     for {
-        num_removed := remove_rolls(b)
+        num_removed := solve(b, true)
         if num_removed == 0 { break }
         n += num_removed
     }    
@@ -82,10 +90,7 @@ main :: proc() {
         fmt.println("part 1 =>", p1)
     }
     { // part 2
-        context.allocator = context.temp_allocator
-        defer free_all(context.allocator)
-        cloned := clone_board(board)
-        p2 := part_2(&cloned) 
+        p2 := part_2(board) 
         fmt.println("part 2 =>", p2)
     }
 }
