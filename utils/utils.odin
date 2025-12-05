@@ -5,6 +5,7 @@ import "base:runtime"
 import "core:fmt"
 import "core:mem"
 import "core:bytes"
+import "core:strings"
 
 Combination_Iterator :: struct($T: typeid) {
     k: int,
@@ -104,20 +105,43 @@ when ODIN_OS == .Windows {
     @(private="file")
     @(rodata)
     byte_line_separator := []byte{'\r', '\n'}
+
+    @(private="file")
+    @(rodata)
+    string_line_separator := "\r\n"
 } else {
     @(private="file")
     @(rodata)
     bytes_line_separator := []byte{'\n'}
+
+    @(private="file")
+    @(rodata)
+    string_line_separator := "\n"
 }
 
-bytes_read_lines :: proc(input: []byte, allocator := context.allocator, skip_last_empty_line: bool = true) -> [][]byte {
-    lines := bytes.split(input, byte_line_separator, allocator = allocator)
+bytes_read_lines :: proc(input: []byte, separator := byte_line_separator, allocator := context.allocator, skip_last_empty_line: bool = true) -> [][]byte {
+    lines := bytes.split(input, separator, allocator = allocator)
 
     if l := len(lines); l > 0 && len(lines[l - 1]) == 0 {
 	lines = lines[:l - 1]
     }
 
     return lines
+}
+
+strings_read_lines :: proc(input: string, separator := string_line_separator, allocator := context.allocator, skip_last_empty_line: bool = true) -> []string {
+    lines := strings.split(input, separator, allocator = allocator)
+
+    if l := len(lines); l > 0 && len(lines[l - 1]) == 0 {
+	lines = lines[:l - 1]
+    }
+
+    return lines
+}
+
+read_lines :: proc {
+    bytes_read_lines,
+    strings_read_lines,
 }
 
 parse_number_from_string :: proc(input: string) -> (n: int) {
