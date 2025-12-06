@@ -112,7 +112,7 @@ when ODIN_OS == .Windows {
 } else {
     @(private="file")
     @(rodata)
-    bytes_line_separator := []byte{'\n'}
+    byte_line_separator := []byte{'\n'}
 
     @(private="file")
     @(rodata)

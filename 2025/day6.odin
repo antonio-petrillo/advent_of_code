@@ -76,47 +76,86 @@ part_1 :: proc(nums: [][]int, ops: []Op) -> int {
 
 // Not the best solution today...
 // Since I knew that the input has specific shape I don't check for sizes and indexes each time
-parse_input_2 :: proc(input: string) -> ([][]int, []Op) {
+parse_input_2 :: proc(input: string) -> ([][][]byte, []Op) {
+    alloc := context.allocator
     defer free_all(context.temp_allocator)
 
     lines := utils.read_lines(input, allocator = context.temp_allocator)
     last_idx := len(lines) - 1
 
-    ops_token := strings.fields(lines[last_idx], allocator = context.temp_allocator)
-    cols_num, rows_num := len(ops_token), len(lines)
+    ops := make([dynamic]Op, allocator = alloc)
+    metadata_cols := make([dynamic]int, allocator = context.temp_allocator)
+    {
+        col_width := 0
 
-    fmt.println(cols_num, rows_num)
-    fmt.println(input)
-    ops := make([]Op, cols_num, allocator = context.allocator)
-    nums := make([][]int, rows_num - 1, allocator = context.allocator)
-    for &row in nums {
-        row = make([]int, cols_num, allocator = context.allocator)
+        last_line := lines[last_idx]
+        for ch, i in last_line {
+            switch ch {
+            case '+':
+                append(&ops, Op.Add)
+                if i > 0 { append(&metadata_cols, col_width) }
+                col_width = 0
+            case '*':
+                append(&ops, Op.Mul)
+                if i > 0 { append(&metadata_cols, col_width) }
+                col_width = 0
+            case ' ':
+                col_width += 1
+            } 
+            if i == len(last_line) - 1 { append(&metadata_cols, col_width + 1) }
+        }
     }
+
+    nums := make([][][]byte, last_idx, allocator = alloc)
+    col_nums := len(ops)
 
     for line, row in lines[:last_idx] {
-        for tok, col in strings.fields(line, allocator = context.temp_allocator) {
-            num, ok := strconv.parse_int(tok)            
-            assert(ok)
+        row_acc := make([dynamic][]byte, allocator = alloc)
+        as_bytes := transmute([]byte) line
 
-            row_idx := 0
-            for num != 0 {
-                rem := num % 10
-                num /= 10
+        start := 0
+        for col_width, col in metadata_cols {
+            num_as_bytes := as_bytes[start : start + col_width]
+            start += col_width + 1
 
-                nums[row_idx][col] = nums[row_idx][col] * 10 + rem
-                row_idx += 1
-            }
+            append(&row_acc, num_as_bytes)
         }
-    }
-
-    for tok, i in ops_token {
-        switch tok[0] {
-        case '+': ops[i] = .Add
-        case '*': ops[i] = .Mul
-        }
+        nums[row] = row_acc[:]
     }
 
     return nums, ops[:]
+}
+
+part_2 :: proc(nums: [][][]byte, ops: []Op) -> int {
+    results := make([dynamic]int, context.allocator)
+    defer delete(results)
+
+    size := len(nums)
+    for op, col_id in ops {
+        rows := make([]int, len(nums[0][col_id]), allocator = context.temp_allocator)
+        defer free_all(context.temp_allocator)
+
+        for i := 0; i < size; i += 1 {
+            num_as_byte := nums[i][col_id]
+            for ch, row_id in num_as_byte {
+                if ch == ' ' { continue }
+
+                digit := int(ch - '0')
+                rows[row_id] = rows[row_id] * 10 + digit
+            }
+        }
+
+        neutro := op == .Add ? 0 : 1
+        switch op {
+        case .Add: for r in rows { neutro += r }
+        case .Mul: for r in rows { neutro *= r }
+        }
+        append(&results, neutro)
+    }
+
+    res := 0
+    for r in results { res += r }
+    return res
 }
 
 main :: proc() {
@@ -126,8 +165,8 @@ main :: proc() {
 
     defer utils.track_report(&track)
 
-    /* raw_input := #load("day6.txt", string) */
-    raw_input := #load("day6_example.txt", string)
+    raw_input := #load("day6.txt", string)
+    /* raw_input := #load("day6_example.txt", string) */
 
     { // part 1
         nums, ops := parse_input(raw_input)
@@ -150,8 +189,15 @@ main :: proc() {
             delete(ops)
         }
 
-        fmt.println(nums)
-        fmt.println(ops)
+        p2 := part_2(nums, ops)
+        fmt.println("part 2 =>", p2)
     }
 
 }
+
+/*
+ * ===
+ * Until now this is the worst code I've written this year, 
+ * there are a lot of hidden assumption, shared memory, conversion and unreadable 'if's and 'for's.b
+ * === 
+ */
