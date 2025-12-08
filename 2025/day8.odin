@@ -176,7 +176,7 @@ solve :: proc(points: []Point, $N: int) -> (sol_1: int, sol_2: int) {
     }
 
     { // solve part 2
-        // merge the shortest distances until there is on estrongly connected component
+        // merge the shortest distances until there is one estrongly connected component
         for {
             min_dist := pq.pop(&min_heap)
             if union_sets(sets[min_dist.p1], sets[min_dist.p2]) {
