@@ -102,19 +102,15 @@ combine :: proc(iter: ^Combination_Iterator($T)) -> (ok: bool) #no_bounds_check 
 
 
 when ODIN_OS == .Windows {
-    @(private="file")
     @(rodata)
     byte_line_separator := []byte{'\r', '\n'}
 
-    @(private="file")
     @(rodata)
     string_line_separator := "\r\n"
 } else {
-    @(private="file")
     @(rodata)
     byte_line_separator := []byte{'\n'}
 
-    @(private="file")
     @(rodata)
     string_line_separator := "\n"
 }
